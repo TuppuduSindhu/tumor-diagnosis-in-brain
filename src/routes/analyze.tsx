@@ -33,7 +33,6 @@ function AnalyzePage() {
   const analyze = useServerFn(analyzeMri);
   const [image, setImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
