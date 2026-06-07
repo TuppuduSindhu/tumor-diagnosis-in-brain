@@ -112,32 +112,6 @@ function AnalyzePage() {
             </CardContent>
           </Card>
 
-          <Card className="glass">
-            <CardHeader><CardTitle className="text-base">2. Scan Parameters</CardTitle></CardHeader>
-            <CardContent className="space-y-3">
-              <div>
-                <Label className="text-xs">MRI Sequence</Label>
-                <Select value={sequence} onValueChange={setSequence}>
-                  <SelectTrigger className="mt-1.5"><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="T1">T1-weighted</SelectItem>
-                    <SelectItem value="T2">T2-weighted</SelectItem>
-                    <SelectItem value="FLAIR">FLAIR</SelectItem>
-                    <SelectItem value="T1+contrast">T1 + Contrast</SelectItem>
-                    <SelectItem value="DWI">DWI</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label className="text-xs">Clinician Notes (optional)</Label>
-                <Textarea
-                  value={notes} onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Patient symptoms, history, region of interest…"
-                  rows={3} className="mt-1.5"
-                />
-              </div>
-            </CardContent>
-          </Card>
 
           <Button
             onClick={run} disabled={!image || loading} size="lg"
