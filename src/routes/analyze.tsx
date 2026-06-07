@@ -32,8 +32,7 @@ function fileToDataUrl(file: File): Promise<string> {
 function AnalyzePage() {
   const analyze = useServerFn(analyzeMri);
   const [image, setImage] = useState<string | null>(null);
-  const [sequence, setSequence] = useState("T1");
-  const [notes, setNotes] = useState("");
+  const [loading, setLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
