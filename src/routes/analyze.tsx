@@ -5,11 +5,8 @@ import { Upload, Loader2, Sparkles, AlertTriangle, CheckCircle2, Image as ImgIco
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { analyzeMri } from "@/lib/analyze.functions";
 import { saveReport, type AnalysisResult } from "@/lib/reports-store";
 
@@ -35,8 +32,6 @@ function fileToDataUrl(file: File): Promise<string> {
 function AnalyzePage() {
   const analyze = useServerFn(analyzeMri);
   const [image, setImage] = useState<string | null>(null);
-  const [sequence, setSequence] = useState("T1");
-  const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -53,13 +48,14 @@ function AnalyzePage() {
     if (!image) { toast.error("Upload an MRI image first"); return; }
     setLoading(true); setResult(null);
     try {
-      const res = await analyze({ data: { imageDataUrl: image, sequence, notes } });
+      const res = await analyze({ data: { imageDataUrl: image } });
       if (!res.ok) { toast.error(res.error); return; }
       setResult(res.result);
       saveReport({
         id: crypto.randomUUID(),
         createdAt: new Date().toISOString(),
-        sequence, notes,
+        sequence: "",
+        notes: "",
         imageDataUrl: image,
         result: res.result,
       });
@@ -116,32 +112,6 @@ function AnalyzePage() {
             </CardContent>
           </Card>
 
-          <Card className="glass">
-            <CardHeader><CardTitle className="text-base">2. Scan Parameters</CardTitle></CardHeader>
-            <CardContent className="space-y-3">
-              <div>
-                <Label className="text-xs">MRI Sequence</Label>
-                <Select value={sequence} onValueChange={setSequence}>
-                  <SelectTrigger className="mt-1.5"><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="T1">T1-weighted</SelectItem>
-                    <SelectItem value="T2">T2-weighted</SelectItem>
-                    <SelectItem value="FLAIR">FLAIR</SelectItem>
-                    <SelectItem value="T1+contrast">T1 + Contrast</SelectItem>
-                    <SelectItem value="DWI">DWI</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label className="text-xs">Clinician Notes (optional)</Label>
-                <Textarea
-                  value={notes} onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Patient symptoms, history, region of interest…"
-                  rows={3} className="mt-1.5"
-                />
-              </div>
-            </CardContent>
-          </Card>
 
           <Button
             onClick={run} disabled={!image || loading} size="lg"
