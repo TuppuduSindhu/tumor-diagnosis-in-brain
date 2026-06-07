@@ -48,13 +48,14 @@ function AnalyzePage() {
     if (!image) { toast.error("Upload an MRI image first"); return; }
     setLoading(true); setResult(null);
     try {
-      const res = await analyze({ data: { imageDataUrl: image, sequence, notes } });
+      const res = await analyze({ data: { imageDataUrl: image } });
       if (!res.ok) { toast.error(res.error); return; }
       setResult(res.result);
       saveReport({
         id: crypto.randomUUID(),
         createdAt: new Date().toISOString(),
-        sequence, notes,
+        sequence: "",
+        notes: "",
         imageDataUrl: image,
         result: res.result,
       });
